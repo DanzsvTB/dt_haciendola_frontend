@@ -1,30 +1,79 @@
-import { AuthBindings } from "@refinedev/core";
+import { AuthBindings, AuthProvider } from '@refinedev/core';
+import axios from 'axios';
 
-export const TOKEN_KEY = "refine-auth";
+export const TOKEN_KEY = 'refine-auth';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const authProvider: AuthBindings = {
+export const authProvider: AuthProvider = {
   login: async ({ username, email, password }) => {
-    if ((username || email) && password) {
-      localStorage.setItem(TOKEN_KEY, username);
+    try {
+      if ((username || email) && password) {
+        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email,
+          password,
+        });
+        const { token } = response.data;
+
+        localStorage.setItem(TOKEN_KEY, token);
+        return {
+          success: true,
+          redirectTo: '/',
+        };
+      }
       return {
-        success: true,
-        redirectTo: "/",
+        success: false,
+        error: {
+          name: 'LoginError',
+          message: 'Invalid username or password',
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          name: 'LoginError',
+          message: 'Invalid username or password',
+        },
       };
     }
+  },
+  register: async ({ email, password }) => {
+    try {
+      if (email && password) {
+        const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+          email,
+          password,
+        });
+        const { token } = response.data;
+        localStorage.setItem(TOKEN_KEY, token);
 
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
+        return {
+          success: true,
+          redirectTo: '/login',
+        };
+      }
+      return {
+        success: false,
+        error: {
+          name: 'LoginError',
+          message: 'Invalid username or password',
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          name: 'LoginError',
+          message: 'Invalid username or password',
+        },
+      };
+    }
   },
   logout: async () => {
     localStorage.removeItem(TOKEN_KEY);
     return {
       success: true,
-      redirectTo: "/login",
+      redirectTo: '/login',
     };
   },
   check: async () => {
@@ -37,7 +86,7 @@ export const authProvider: AuthBindings = {
 
     return {
       authenticated: false,
-      redirectTo: "/login",
+      redirectTo: '/login',
     };
   },
   getPermissions: async () => null,
@@ -46,8 +95,8 @@ export const authProvider: AuthBindings = {
     if (token) {
       return {
         id: 1,
-        name: "John Doe",
-        avatar: "https://i.pravatar.cc/300",
+        name: '',
+        avatar: '',
       };
     }
     return null;
