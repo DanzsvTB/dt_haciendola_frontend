@@ -35,8 +35,8 @@
   },
   "scripts": {
     "dev": "refine dev",
-    "build": "VITE_V1_BACK_URL=https://dthaciendolabackend-production.up.railway.app/api/v1 tsc && refine build",
-    "preview": "VITE_V1_BACK_URL=https://dthaciendolabackend-production.up.railway.app/api/v1 refine start",
+    "build": "tsc && refine build",
+    "preview": "refine start",
     "refine": "refine"
   },
   "browserslist": {

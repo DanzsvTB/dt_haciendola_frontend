@@ -17,6 +17,7 @@ RUN \
 FROM base as builder
 
 ENV NODE_ENV production
+ENV VITE_V1_BACK_URL=https://dthaciendolabackend-production.up.railway.app/api/v1
 
 COPY --from=deps /app/refine/node_modules ./node_modules
 
