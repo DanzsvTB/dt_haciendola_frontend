@@ -35,7 +35,8 @@ import {
 import axios, { AxiosInstance } from 'axios';
 
 function App() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const API_BASE_URL = import.meta.env.VITE_V1_BACK_URL;
+  console.log(API_BASE_URL);
   const axiosInstance: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
   });
